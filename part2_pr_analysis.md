@@ -115,7 +115,7 @@ The implementation is clean and minimal, following the existing patterns in the 
 
 **1. Config Registration:** The `readonly` option is added to the web plugin's default config template (`self.config`), which uses the `confuse` library. The default value is `True`, ensuring security-by-default. This integrates naturally with beets' YAML-based configuration system — users override it by adding `web: { readonly: no }` to their `config.yaml`.
 
-**2. Flask App Config Bridge:** During the Flask app's initialization (in the `create_app()` method), the beets-level config value is bridged to Flask's own config system: `app.config['READONLY'] = self.config['readonly'].get(bool)`. This is a critical step because Flask route handlers access configuration via `flask.current_app.config`, not via the beets config directly. Notably, this exact step was initially **missing** in the first version of the PR — the maintainer (sampsyo) caught that the beets config value was never being read and connected to Flask's config. This bug was fixed in commit `4ffe9a2`.
+**2. Flask App Config Bridge:** During the Flask app's initialization (in the `create_app()` method), the beets-level config value is bridged to Flask's own config system: `app.config['READONLY'] = self.config['readonly'].get(bool)`. This is a critical step because Flask route handlers access configuration via `flask.current_app.config`, not via the beets config directly. Notably, this exact step was initially **missing** in the first version of the PR - the maintainer (sampsyo) caught that the beets config value was never being read and connected to Flask's config. This bug was fixed in commit `4ffe9a2`.
 
 **3. Route Handler Guards:** Each destructive endpoint (`delete_item`, `delete_album`, `patch_item`, `patch_album`) now begins with a simple guard clause:
 
@@ -124,7 +124,7 @@ if flask.current_app.config['READONLY']:
     return flask.abort(405)
 ```
 
-This pattern uses Flask's standard `abort()` to return a `405 Method Not Allowed` HTTP status, which is semantically correct — the method exists but is not allowed in the current server configuration. The guard is checked before any database operations occur, ensuring no partial state changes on rejected requests.
+This pattern uses Flask's standard `abort()` to return a `405 Method Not Allowed` HTTP status, which is semantically correct - the method exists but is not allowed in the current server configuration. The guard is checked before any database operations occur, ensuring no partial state changes on rejected requests.
 
 **4. Test Architecture:** The tests use Flask's built-in test client (`app.test_client()`) to simulate HTTP requests. The `readonly` config is toggled per-test by modifying the beets config object before creating the test client. A test ordering bug was also fixed — the initial implementation used class-level state for the readonly flag that could leak between tests when using `--random-order`.
 
@@ -137,7 +137,7 @@ This PR has a **deliberate backwards-incompatible** impact:
 - **Existing web plugin users** - Any user who relied on `DELETE` or `PATCH` via the web API will find these operations suddenly rejected after updating. They must add `readonly: no` to their web config. The maintainers accepted this breaking change as necessary for security.
 - **`beetsplug/web/__init__.py`** - The 4 route handlers (`delete_item`, `delete_album`, `patch_item`, `patch_album`) all gain a new guard clause. Future route handlers that perform mutations must also check `READONLY`.
 - **Third-party web clients** - Any application (e.g., mobile apps, custom dashboards) that uses the beets web API for writes will need to ensure the server is configured with `readonly: no`.
-- **Security posture** - Sets a precedent that beets network-facing features should default to minimal permissions. This is especially important because the web plugin has no authentication mechanism — the `readonly` flag is now the only protection against unauthorized modifications over the network.
+- **Security posture** - Sets a precedent that beets network-facing features should default to minimal permissions. This is especially important because the web plugin has no authentication mechanism - the `readonly` flag is now the only protection against unauthorized modifications over the network.
 
 ---
 
