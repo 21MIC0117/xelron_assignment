@@ -119,7 +119,7 @@ Modify `ImportTask.lookup_candidates()` and `SingletonImportTask.lookup_candidat
 Modify the `manual_id()` function so that the user-entered ID string is split on whitespace (`search_id.split()`) and passed to `tag_album()` / `tag_item()` via the `search_ids` parameter.
 
 ### Acceptance Criteria to Satisfy
-- AC-1 through AC-8 as defined above — especially backward compatibility (AC-6), multi-ID support (AC-2, AC-7), and metadata backend agnosticism (AC-8).
+- AC-1 through AC-8 as defined above - especially backward compatibility (AC-6), multi-ID support (AC-2, AC-7), and metadata backend agnosticism (AC-8).
 
 ### Edge Cases to Handle
 - Invalid/non-existent IDs → return empty candidates, not a crash
@@ -130,7 +130,7 @@ Modify the `manual_id()` function so that the user-entered ID string is split on
 
 ### Testing Requirements
 - Add an `ImportMusicBrainzIdTest` class in the test suite
-- Mock `musicbrainzngs.get_release_by_id` and `musicbraingngs.get_recording_by_id` — don't make real HTTP calls to MusicBrainz in tests
+- Mock `musicbrainzngs.get_release_by_id` and `musicbraingngs.get_recording_by_id` - don't make real HTTP calls to MusicBrainz in tests
 - Test single ID import for both albums and singletons
 - Test multiple ID import with candidates sorted by distance
 - Test that an invalid ID returns zero candidates without crashing
@@ -139,5 +139,5 @@ Modify the `manual_id()` function so that the user-entered ID string is split on
 ### Important Constraints
 - Do not break existing behavior when `-S` is not used
 - The `search_ids` parameter must flow through the existing pipeline architecture (CLI → session config → stage → task → autotag)
-- Use `metadata_plugins.albums_for_ids()` and `metadata_plugins.tracks_for_ids()` as the entry points for ID-based lookups — these are the hook functions that all metadata source plugins implement
+- Use `metadata_plugins.albums_for_ids()` and `metadata_plugins.tracks_for_ids()` as the entry points for ID-based lookups - these are the hook functions that all metadata source plugins implement
 - Candidates must always be sorted by distance before computing recommendations
