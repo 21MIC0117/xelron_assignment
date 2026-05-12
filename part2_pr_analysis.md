@@ -4,7 +4,7 @@
 
 ---
 
-## PR Overview — All 10 Reviewed
+## PR Overview -All 10 Reviewed
 
 | # | PR | Title | Status | Comprehension |
 |---|---|---|---|---|
@@ -30,7 +30,7 @@
 
 ---
 
-## Selected PR #1 — [#1808: Add MusicBrainz ID Option to Importer](https://github.com/beetbox/beets/pull/1808)
+## Selected PR #1 - [#1808: Add MusicBrainz ID Option to Importer](https://github.com/beetbox/beets/pull/1808)
 
 **Author:** diego-plan9 | **Date:** January 2016 | **Status:** Merged | **Commits:** 10 | **Closes:** [#170](https://github.com/beetbox/beets/issues/170)
 
@@ -81,7 +81,7 @@ This PR affects the **import pipeline** — the most critical user-facing workfl
 
 ---
 
-## Selected PR #2 — [#3877: Web Readonly Mode](https://github.com/beetbox/beets/pull/3877)
+## Selected PR #2 - [#3877: Web Readonly Mode](https://github.com/beetbox/beets/pull/3877)
 
 **Author:** GrahamCobb | **Date:** March 2021 | **Status:** Merged | **Commits:** 8 | **Closes:** [#3870](https://github.com/beetbox/beets/issues/3870)
 
