@@ -130,7 +130,7 @@ Modify the `manual_id()` function so that the user-entered ID string is split on
 
 ### Testing Requirements
 - Add an `ImportMusicBrainzIdTest` class in the test suite
-- Mock `musicbrainzngs.get_release_by_id` and `musicbraingngs.get_recording_by_id` — do NOT make real HTTP calls to MusicBrainz in tests
+- Mock `musicbrainzngs.get_release_by_id` and `musicbraingngs.get_recording_by_id` — don't make real HTTP calls to MusicBrainz in tests
 - Test single ID import for both albums and singletons
 - Test multiple ID import with candidates sorted by distance
 - Test that an invalid ID returns zero candidates without crashing
