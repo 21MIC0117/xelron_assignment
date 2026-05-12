@@ -47,9 +47,9 @@ When users import large music collections into beets, the auto-tagger must query
 **Files/components modified:**
 
 - **`beets/ui/commands.py`** - Added the `-m` / `--musicbrainzid` argument to the import subcommand parser; passes the user-supplied IDs into the import session configuration
-- **`beets/importer.py`** (now `beets/importer/tasks.py`) — Modified `ImportTask.lookup_candidates()` and `SingletonImportTask.lookup_candidates()` to read the MusicBrainz IDs from the config and pass them to the autotag matching functions; added `task.musicbrainz_ids` attribute to store IDs on the Task object
+- **`beets/importer.py`** (now `beets/importer/tasks.py`) - Modified `ImportTask.lookup_candidates()` and `SingletonImportTask.lookup_candidates()` to read the MusicBrainz IDs from the config and pass them to the autotag matching functions; added `task.musicbrainz_ids` attribute to store IDs on the Task object
 - **`beets/autotag/match.py`** - Changed the signatures of `tag_album()` and `tag_item()` from accepting a single `search_id` to accepting a list `search_ids`; added loop logic to fetch and accumulate matches for all supplied IDs; ensured candidates are properly sorted by distance before computing recommendations
-- **`test/test_importer.py`** - Added `ImportMusicBrainzIdTest` test class with mocked calls to `musicbrainzngs.get_release_by_id` and `musicbrainzngs.get_recording_by_id` — covering single/multiple ID imports for both albums and singletons
+- **`test/test_importer.py`** - Added `ImportMusicBrainzIdTest` test class with mocked calls to `musicbrainzngs.get_release_by_id` and `musicbrainzngs.get_recording_by_id` - covering single/multiple ID imports for both albums and singletons
 - **`docs/reference/cli.rst`** - Documented the `--musicbrainzid` option
 - **`docs/reference/tagger.rst`** - Documented the ability to enter multiple space-separated IDs at the interactive "enter Id" prompt
 - **`docs/changelog.rst`** - Added changelog entry
