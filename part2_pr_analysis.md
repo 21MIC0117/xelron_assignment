@@ -62,11 +62,11 @@ The implementation follows a layered approach that respects beets' existing pipe
 
 **1. CLI Layer (`ui/commands.py`):** A new `--musicbrainzid` argument is added using Python's `argparse`, configured with `action='append'` so users can specify it multiple times (`-m ID1 -m ID2`). The collected IDs are stored in the import session's config dictionary under `config['import']['search_ids']`.
 
-**2. Pipeline Stage (`importer.py` → `lookup_candidates`):** During the `lookup_candidates` pipeline stage, the code reads the user-supplied IDs from the config. These IDs are stored directly as an attribute on the `ImportTask` object (`task.musicbrainz_ids`), making them accessible to downstream processing. This is a design choice that makes the IDs a property of the task itself rather than a global config value — allowing future extensions where different tasks could have different IDs assigned programmatically.
+**2. Pipeline Stage (`importer.py` → `lookup_candidates`):** During the `lookup_candidates` pipeline stage, the code reads the user-supplied IDs from the config. These IDs are stored directly as an attribute on the `ImportTask` object (`task.musicbrainz_ids`), making them accessible to downstream processing. This is a design choice that makes the IDs a property of the task itself rather than a global config value - allowing future extensions where different tasks could have different IDs assigned programmatically.
 
-**3. Autotag Matching (`autotag/match.py`):** The core change generalizes the `tag_album()` and `tag_item()` function signatures from `search_id` (single string) to `search_ids` (list of strings). When IDs are provided, the function iterates over each ID, calls the appropriate `*_for_id` hook in `beets.autotag.hooks` (which queries MusicBrainz via `musicbraingngs`), and collects all returned candidates. The candidates are then sorted by their edit distance scores and the best recommendation is computed — preserving the existing distance-based matching logic. When no IDs are supplied, the function falls back to the original broad keyword search behavior, maintaining full backward compatibility.
+**3. Autotag Matching (`autotag/match.py`):** The core change generalizes the `tag_album()` and `tag_item()` function signatures from `search_id` (single string) to `search_ids` (list of strings). When IDs are provided, the function iterates over each ID, calls the appropriate `*_for_id` hook in `beets.autotag.hooks` (which queries MusicBrainz via `musicbraingngs`), and collects all returned candidates. The candidates are then sorted by their edit distance scores and the best recommendation is computed - preserving the existing distance-based matching logic. When no IDs are supplied, the function falls back to the original broad keyword search behavior, maintaining full backward compatibility.
 
-**4. Interactive Enhancement:** The "enter Id" prompt in the interactive importer was also extended to split user input on spaces, enabling multiple IDs to be entered during the import session itself — not just via the CLI flag.
+**4. Interactive Enhancement:** The "enter Id" prompt in the interactive importer was also extended to split user input on spaces, enabling multiple IDs to be entered during the import session itself - not just via the CLI flag.
 
 ---
 
@@ -76,7 +76,7 @@ This PR affects the **import pipeline** - the most critical user-facing workflow
 
 - **`beets/autotag/match.py`** - The `tag_album()` and `tag_item()` signature change (`search_id` → `search_ids`) is a **breaking API change** for any third-party code or plugin that calls these functions directly. However, since the functions remain backward-compatible (an empty list triggers the default search), the impact is contained.
 - **`beets/importer/tasks.py`** - Adding `musicbrainz_ids` as a task attribute sets a precedent for future task-level metadata (e.g., Discogs IDs, Spotify IDs), influencing how metadata source plugins interact with the import pipeline.
-- **Metadata source plugins** (MusicBrainz, Discogs, Spotify) — The ID-based lookup is routed through `beets.autotag.hooks.*_for_id`, so any metadata source plugin implementing `album_for_id()` or `track_for_id()` benefits automatically without code changes.
+- **Metadata source plugins** (MusicBrainz, Discogs, Spotify) - The ID-based lookup is routed through `beets.autotag.hooks.*_for_id`, so any metadata source plugin implementing `album_for_id()` or `track_for_id()` benefits automatically without code changes.
 - **Test infrastructure** - Introduces a mocking pattern for MusicBrainz API responses that can be reused by future test authors.
 
 ---
@@ -113,7 +113,7 @@ The beets web plugin provides a Flask-based HTTP API that exposes the music libr
 
 The implementation is clean and minimal, following the existing patterns in the beets web plugin:
 
-**1. Config Registration:** The `readonly` option is added to the web plugin's default config template (`self.config`), which uses the `confuse` library. The default value is `True`, ensuring security-by-default. This integrates naturally with beets' YAML-based configuration system — users override it by adding `web: { readonly: no }` to their `config.yaml`.
+**1. Config Registration:** The `readonly` option is added to the web plugin's default config template (`self.config`), which uses the `confuse` library. The default value is `True`, ensuring security-by-default. This integrates naturally with beets' YAML-based configuration system - users override it by adding `web: { readonly: no }` to their `config.yaml`.
 
 **2. Flask App Config Bridge:** During the Flask app's initialization (in the `create_app()` method), the beets-level config value is bridged to Flask's own config system: `app.config['READONLY'] = self.config['readonly'].get(bool)`. This is a critical step because Flask route handlers access configuration via `flask.current_app.config`, not via the beets config directly. Notably, this exact step was initially **missing** in the first version of the PR - the maintainer (sampsyo) caught that the beets config value was never being read and connected to Flask's config. This bug was fixed in commit `4ffe9a2`.
 
@@ -126,7 +126,7 @@ if flask.current_app.config['READONLY']:
 
 This pattern uses Flask's standard `abort()` to return a `405 Method Not Allowed` HTTP status, which is semantically correct - the method exists but is not allowed in the current server configuration. The guard is checked before any database operations occur, ensuring no partial state changes on rejected requests.
 
-**4. Test Architecture:** The tests use Flask's built-in test client (`app.test_client()`) to simulate HTTP requests. The `readonly` config is toggled per-test by modifying the beets config object before creating the test client. A test ordering bug was also fixed — the initial implementation used class-level state for the readonly flag that could leak between tests when using `--random-order`.
+**4. Test Architecture:** The tests use Flask's built-in test client (`app.test_client()`) to simulate HTTP requests. The `readonly` config is toggled per-test by modifying the beets config object before creating the test client. A test ordering bug was also fixed - the initial implementation used class-level state for the readonly flag that could leak between tests when using `--random-order`.
 
 ---
 
