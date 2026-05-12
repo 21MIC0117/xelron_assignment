@@ -13,7 +13,7 @@ The core problem beets solves is the gap between messy real-world music files an
 
 The architecture is built around a multi-stage import pipeline that processes albums through discrete steps: reading files, looking up candidates, asking the user for confirmation, applying metadata, and moving files. This pipeline uses Python generators acting as coroutines, which allows stages to be composed together flexibly.
 
-Beyond the core import workflow, beets has a plugin system with over 70 built-in plugins. These plugins handle everything from fetching lyrics and album art to running a web server that exposes the library over HTTP. Plugins hook into the system through an event-based publish-subscribe pattern — they register listeners for events like `import_task_start` or `item_imported` and can modify behavior at those points.
+Beyond the core import workflow, beets has a plugin system with over 70 built-in plugins. These plugins handle everything from fetching lyrics and album art to running a web server that exposes the library over HTTP. Plugins hook into the system through an event-based publish-subscribe pattern - they register listeners for events like `import_task_start` or `item_imported` and can modify behavior at those points.
 
 The project uses Poetry for dependency management, SQLite for its database layer (wrapped by a custom ORM called `dbcore`), and `confuse` for YAML-based configuration. It targets music enthusiasts, archivists, and anyone managing large audio collections who wants automated, accurate tagging.
 
