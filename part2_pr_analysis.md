@@ -23,7 +23,7 @@
 
 | Criterion | PR #1808 | PR #3877 |
 |---|---|---|
-| **Scope** | Core import pipeline — touches the heart of beets' architecture | Plugin-level security — focused change in the web plugin |
+| **Scope** | Core import pipeline - touches the heart of beets' architecture | Plugin-level security - focused change in the web plugin |
 | **Architectural Depth** | Modifies autotag matching, CLI commands, pipeline stages, and Task model | Modifies Flask route handlers, config system, and test infrastructure |
 | **Clarity** | Clean review thread with maintainer (sampsyo), iterative refinement | Straightforward problem-solution with a critical bug caught during review |
 | **Comprehension** | Deeply aligns with my understanding of the importer pipeline, `autotag/match.py`, and the `BeetsPlugin` event system | Aligns with my understanding of the web plugin (`beetsplug/web/`), Flask patterns, and the `confuse`-based config system |
