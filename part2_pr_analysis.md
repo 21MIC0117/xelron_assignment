@@ -46,13 +46,13 @@ When users import large music collections into beets, the auto-tagger must query
 
 **Files/components modified:**
 
-- **`beets/ui/commands.py`** — Added the `-m` / `--musicbrainzid` argument to the import subcommand parser; passes the user-supplied IDs into the import session configuration
+- **`beets/ui/commands.py`** - Added the `-m` / `--musicbrainzid` argument to the import subcommand parser; passes the user-supplied IDs into the import session configuration
 - **`beets/importer.py`** (now `beets/importer/tasks.py`) — Modified `ImportTask.lookup_candidates()` and `SingletonImportTask.lookup_candidates()` to read the MusicBrainz IDs from the config and pass them to the autotag matching functions; added `task.musicbrainz_ids` attribute to store IDs on the Task object
-- **`beets/autotag/match.py`** — Changed the signatures of `tag_album()` and `tag_item()` from accepting a single `search_id` to accepting a list `search_ids`; added loop logic to fetch and accumulate matches for all supplied IDs; ensured candidates are properly sorted by distance before computing recommendations
-- **`test/test_importer.py`** — Added `ImportMusicBrainzIdTest` test class with mocked calls to `musicbrainzngs.get_release_by_id` and `musicbrainzngs.get_recording_by_id` — covering single/multiple ID imports for both albums and singletons
-- **`docs/reference/cli.rst`** — Documented the `--musicbrainzid` option
-- **`docs/reference/tagger.rst`** — Documented the ability to enter multiple space-separated IDs at the interactive "enter Id" prompt
-- **`docs/changelog.rst`** — Added changelog entry
+- **`beets/autotag/match.py`** - Changed the signatures of `tag_album()` and `tag_item()` from accepting a single `search_id` to accepting a list `search_ids`; added loop logic to fetch and accumulate matches for all supplied IDs; ensured candidates are properly sorted by distance before computing recommendations
+- **`test/test_importer.py`** - Added `ImportMusicBrainzIdTest` test class with mocked calls to `musicbrainzngs.get_release_by_id` and `musicbrainzngs.get_recording_by_id` — covering single/multiple ID imports for both albums and singletons
+- **`docs/reference/cli.rst`** - Documented the `--musicbrainzid` option
+- **`docs/reference/tagger.rst`** - Documented the ability to enter multiple space-separated IDs at the interactive "enter Id" prompt
+- **`docs/changelog.rst`** - Added changelog entry
 
 ---
 
@@ -72,12 +72,12 @@ The implementation follows a layered approach that respects beets' existing pipe
 
 ### Potential Impact
 
-This PR affects the **import pipeline** — the most critical user-facing workflow in beets. Specifically:
+This PR affects the **import pipeline** - the most critical user-facing workflow in beets. Specifically:
 
-- **`beets/autotag/match.py`** — The `tag_album()` and `tag_item()` signature change (`search_id` → `search_ids`) is a **breaking API change** for any third-party code or plugin that calls these functions directly. However, since the functions remain backward-compatible (an empty list triggers the default search), the impact is contained.
-- **`beets/importer/tasks.py`** — Adding `musicbrainz_ids` as a task attribute sets a precedent for future task-level metadata (e.g., Discogs IDs, Spotify IDs), influencing how metadata source plugins interact with the import pipeline.
+- **`beets/autotag/match.py`** - The `tag_album()` and `tag_item()` signature change (`search_id` → `search_ids`) is a **breaking API change** for any third-party code or plugin that calls these functions directly. However, since the functions remain backward-compatible (an empty list triggers the default search), the impact is contained.
+- **`beets/importer/tasks.py`** - Adding `musicbrainz_ids` as a task attribute sets a precedent for future task-level metadata (e.g., Discogs IDs, Spotify IDs), influencing how metadata source plugins interact with the import pipeline.
 - **Metadata source plugins** (MusicBrainz, Discogs, Spotify) — The ID-based lookup is routed through `beets.autotag.hooks.*_for_id`, so any metadata source plugin implementing `album_for_id()` or `track_for_id()` benefits automatically without code changes.
-- **Test infrastructure** — Introduces a mocking pattern for MusicBrainz API responses that can be reused by future test authors.
+- **Test infrastructure** - Introduces a mocking pattern for MusicBrainz API responses that can be reused by future test authors.
 
 ---
 
@@ -97,15 +97,15 @@ The beets web plugin provides a Flask-based HTTP API that exposes the music libr
 
 **Files/components modified:**
 
-- **`beetsplug/web/__init__.py`** — Added `readonly: True` to the plugin's default config dictionary; added logic in the Flask app factory to read the `readonly` value from the beets config (`self.config['readonly']`) and store it in Flask's `app.config['READONLY']`; added guard checks at the beginning of the `delete_item()`, `delete_album()`, `patch_item()`, and `patch_album()` route handlers that return a `405` response if `readonly` is `true`
-- **`test/test_web.py`** (now `test/plugins/test_web.py`) — Added comprehensive test methods covering:
-  - `test_delete_item_readonly` / `test_delete_album_readonly` — Verify that DELETE requests return 405 in readonly mode
-  - `test_delete_item_writable` / `test_delete_album_writable` — Verify that DELETE requests succeed when `readonly: no`
-  - `test_patch_item_readonly` / `test_patch_album_readonly` — Verify that PATCH requests return 405 in readonly mode
-  - `test_patch_item_writable` / `test_patch_album_writable` — Verify that PATCH operations succeed when `readonly: no`
+- **`beetsplug/web/__init__.py`** - Added `readonly: True` to the plugin's default config dictionary; added logic in the Flask app factory to read the `readonly` value from the beets config (`self.config['readonly']`) and store it in Flask's `app.config['READONLY']`; added guard checks at the beginning of the `delete_item()`, `delete_album()`, `patch_item()`, and `patch_album()` route handlers that return a `405` response if `readonly` is `true`
+- **`test/test_web.py`** (now `test/plugins/test_web.py`) - Added comprehensive test methods covering:
+  - `test_delete_item_readonly` / `test_delete_album_readonly` -Verify that DELETE requests return 405 in readonly mode
+  - `test_delete_item_writable` / `test_delete_album_writable` - Verify that DELETE requests succeed when `readonly: no`
+  - `test_patch_item_readonly` / `test_patch_album_readonly` - Verify that PATCH requests return 405 in readonly mode
+  - `test_patch_item_writable` / `test_patch_album_writable` - Verify that PATCH operations succeed when `readonly: no`
   - Fixed test ordering issues discovered during random-order test runs
-- **`docs/plugins/web.rst`** — Documented the new `readonly` option, its default value, and how to disable it
-- **`docs/changelog.rst`** — Added changelog entry noting the **backwards-incompatible** default change
+- **`docs/plugins/web.rst`** - Documented the new `readonly` option, its default value, and how to disable it
+- **`docs/changelog.rst`** - Added changelog entry noting the **backwards-incompatible** default change
 
 ---
 
@@ -134,10 +134,10 @@ This pattern uses Flask's standard `abort()` to return a `405 Method Not Allowed
 
 This PR has a **deliberate backwards-incompatible** impact:
 
-- **Existing web plugin users** — Any user who relied on `DELETE` or `PATCH` via the web API will find these operations suddenly rejected after updating. They must add `readonly: no` to their web config. The maintainers accepted this breaking change as necessary for security.
-- **`beetsplug/web/__init__.py`** — The 4 route handlers (`delete_item`, `delete_album`, `patch_item`, `patch_album`) all gain a new guard clause. Future route handlers that perform mutations must also check `READONLY`.
-- **Third-party web clients** — Any application (e.g., mobile apps, custom dashboards) that uses the beets web API for writes will need to ensure the server is configured with `readonly: no`.
-- **Security posture** — Sets a precedent that beets network-facing features should default to minimal permissions. This is especially important because the web plugin has no authentication mechanism — the `readonly` flag is now the only protection against unauthorized modifications over the network.
+- **Existing web plugin users** - Any user who relied on `DELETE` or `PATCH` via the web API will find these operations suddenly rejected after updating. They must add `readonly: no` to their web config. The maintainers accepted this breaking change as necessary for security.
+- **`beetsplug/web/__init__.py`** - The 4 route handlers (`delete_item`, `delete_album`, `patch_item`, `patch_album`) all gain a new guard clause. Future route handlers that perform mutations must also check `READONLY`.
+- **Third-party web clients** - Any application (e.g., mobile apps, custom dashboards) that uses the beets web API for writes will need to ensure the server is configured with `readonly: no`.
+- **Security posture** - Sets a precedent that beets network-facing features should default to minimal permissions. This is especially important because the web plugin has no authentication mechanism — the `readonly` flag is now the only protection against unauthorized modifications over the network.
 
 ---
 
