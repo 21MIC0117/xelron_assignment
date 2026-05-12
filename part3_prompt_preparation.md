@@ -7,7 +7,7 @@
 
 ## 3.1.1 Repository Context
 
-Beets is a command-line music library manager written entirely in Python. It is designed for people who have large personal music collections stored as audio files on disk — the kind of users who care deeply about having correct, consistent metadata (artist names, album titles, track numbers, genres) across their entire library. Think of someone with thousands of FLAC or MP3 files scattered across folders, many with incomplete or inconsistent tags.
+Beets is a command-line music library manager written entirely in Python. It is designed for people who have large personal music collections stored as audio files on disk - the kind of users who care deeply about having correct, consistent metadata (artist names, album titles, track numbers, genres) across their entire library. Think of someone with thousands of FLAC or MP3 files scattered across folders, many with incomplete or inconsistent tags.
 
 The core problem beets solves is the gap between messy real-world music files and a cleanly organized, properly tagged library. When a user runs `beet import /path/to/music`, beets reads the existing file tags, queries online databases like MusicBrainz to find the correct release, presents candidates to the user for confirmation, and then writes the corrected metadata back into the files. It can also rename and reorganize files on disk according to configurable path templates.
 
@@ -43,7 +43,7 @@ The change touches several layers. At the CLI level, a new `--search-id` argumen
 
 ✓ **AC-5: Interactive "enter Id" Prompt.** When the user selects the "enter Id" (`i`) option during an interactive import session and types one or more space-separated IDs, the system should split the input on whitespace and pass all resulting IDs to `tag_album()` or `tag_item()` via the `search_ids` parameter.
 
-✓ **AC-6: Backward Compatibility.** When no `-S` flag is provided and `search_ids` is empty, the import pipeline should behave identically to the pre-change behavior — performing the standard metadata-based text search and ID consensus lookup.
+✓ **AC-6: Backward Compatibility.** When no `-S` flag is provided and `search_ids` is empty, the import pipeline should behave identically to the pre-change behavior - performing the standard metadata-based text search and ID consensus lookup.
 
 ✓ **AC-7: Distance-Based Sorting.** When multiple IDs are provided (either via CLI or the interactive prompt), all resulting candidates should be sorted by their computed distance score (ascending), and the recommendation should be calculated from this sorted list, just as it is for text-search candidates.
 
@@ -57,13 +57,13 @@ The change touches several layers. At the CLI level, a new `--search-id` argumen
 
 **Scenario:** The user provides an ID that does not correspond to any release or recording in MusicBrainz (e.g., a typo, a random UUID, or an ID from a different service).
 
-**Expected Handling:** The `albums_for_ids()` / `tracks_for_ids()` hook should return an empty result for that ID. If all supplied IDs are invalid, `tag_album()` should return an empty candidates list with a `Recommendation.none`, and `tag_item()` should return `Proposal([], Recommendation.none)`. The importer should then display "No matching release found" and present the user with fallback options (Skip, Use as-is, Enter search, etc.) — the same behavior as when a normal text search yields zero results. The system must not crash or raise an unhandled exception.
+**Expected Handling:** The `albums_for_ids()` / `tracks_for_ids()` hook should return an empty result for that ID. If all supplied IDs are invalid, `tag_album()` should return an empty candidates list with a `Recommendation.none`, and `tag_item()` should return `Proposal([], Recommendation.none)`. The importer should then display "No matching release found" and present the user with fallback options (Skip, Use as-is, Enter search, etc.) - the same behavior as when a normal text search yields zero results. The system must not crash or raise an unhandled exception.
 
 ### Edge Case 2: Mixed Valid and Invalid IDs in a Multi-ID Query
 
 **Scenario:** The user passes multiple IDs via `-S ID1 -S ID2 -S ID3`, where `ID1` and `ID3` are valid MusicBrainz release IDs but `ID2` is invalid or returns nothing.
 
-**Expected Handling:** The system should gracefully skip `ID2` (it simply won't produce a candidate) and return candidates only for `ID1` and `ID3`. The two valid candidates should be sorted by distance and a recommendation should be computed normally. No error should be raised for the missing ID — the loop in `tag_album()` that iterates over `metadata_plugins.albums_for_ids(search_ids)` naturally handles this because the hook generator simply yields nothing for unknown IDs.
+**Expected Handling:** The system should gracefully skip `ID2` (it simply won't produce a candidate) and return candidates only for `ID1` and `ID3`. The two valid candidates should be sorted by distance and a recommendation should be computed normally. No error should be raised for the missing ID - the loop in `tag_album()` that iterates over `metadata_plugins.albums_for_ids(search_ids)` naturally handles this because the hook generator simply yields nothing for unknown IDs.
 
 ### Edge Case 3: ID Belongs to a Different Entity Type
 
@@ -87,7 +87,7 @@ The change touches several layers. At the CLI level, a new `--search-id` argumen
 
 ## 3.1.5 Initial Prompt
 
-You are tasked with implementing a feature for the **beets** music library manager — a Python command-line tool that imports music files, auto-tags them using MusicBrainz metadata, and organizes them into a library backed by SQLite.
+You are tasked with implementing a feature for the **beets** music library manager - a Python command-line tool that imports music files, auto-tags them using MusicBrainz metadata, and organizes them into a library backed by SQLite.
 
 ### Feature Overview
 
