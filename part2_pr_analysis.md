@@ -8,14 +8,14 @@
 
 | # | PR | Title | Status | Comprehension |
 |---|---|---|---|---|
-| i | [#1808](https://github.com/beetbox/beets/pull/1808) | Add MusicBrainz ID option to importer | Merged | ✅ **Selected** |
+| i | [#1808](https://github.com/beetbox/beets/pull/1808) | Add MusicBrainz ID option to importer | Merged |  **Selected** |
 | ii | [#3145](https://github.com/beetbox/beets/pull/3145) | Playlist plugin (M3U support) | Open | Understood |
 | iii | [#3214](https://github.com/beetbox/beets/pull/3214) | bpd: support MPD 0.16 protocol | Merged | Understood |
 | iv | [#3279](https://github.com/beetbox/beets/pull/3279) | Add parentwork plugin | Merged | Understood |
 | v | [#3478](https://github.com/beetbox/beets/pull/3478) | Implement parallel ReplayGain analysis | Open | Understood |
 | vi | [#3509](https://github.com/beetbox/beets/pull/3509) | Fish shell tab completion plugin | Open | Understood |
 | vii | [#3568](https://github.com/beetbox/beets/pull/3568) | New AlbumInfo and TrackInfo class refactor | Open | Understood |
-| viii | [#3877](https://github.com/beetbox/beets/pull/3877) | Web readonly mode | Merged | ✅ **Selected** |
+| viii | [#3877](https://github.com/beetbox/beets/pull/3877) | Web readonly mode | Merged |  **Selected** |
 | ix | [#3883](https://github.com/beetbox/beets/pull/3883) | Bare-ASCII matching query plugin | Merged | Understood |
 | x | [#4199](https://github.com/beetbox/beets/pull/4199) | Configurable duplicate detection keys | Open | Understood |
 
